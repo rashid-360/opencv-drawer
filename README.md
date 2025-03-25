@@ -1,3 +1,3 @@
 # opencv-drawer
-use python 12 to run the project
+use python 12 to run this project
 # opencv-drawer
