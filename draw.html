@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Example</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" style="border:1px solid #000000;"></canvas> 
+
+    <script>
+        var tx = 500;
+        var ty = 350;
+        var c = document.getElementById("myCanvas");
+        c.height = 700;
+        c.width = 1000;
+
+        const socket = new WebSocket('ws://localhost:8000/socketmsg/');
+
+        socket.onmessage = function(event) {
+            const message = JSON.parse(event.data); // Parse the JSON string to object
+            var x = message.x * 1.5;
+            var y = message.y * 1.45;
+            drawPath(tx, ty, x, y);
+            tx = x;
+            ty = y;
+        };
+
+        function drawPath(startX, startY, endX, endY) {
+            var ctx = c.getContext("2d");
+            var dx = endX - startX;
+            var dy = endY - startY;
+            var distance = Math.sqrt(dx * dx + dy * dy);
+            var stepSize = 15; // Circle radius
+            var steps = distance / stepSize;
+            var incrementX = dx / steps;
+            var incrementY = dy / steps;
+
+            for (var i = 0; i <= steps; i++) {
+                var x = startX + incrementX * i;
+                var y = startY + incrementY * i;
+                drawCircle(x, y);
+            }
+        }
+
+        function drawCircle(x, y) {
+            var ctx = c.getContext("2d");
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fillStyle = "red";
+            ctx.fill();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Example</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" style="border:1px solid #000000;"></canvas> 
+
+    <script>
+       var block=75
+        var tx = 500;
+        var ty = 350;
+        var c = document.getElementById("myCanvas");
+        c.height = 700;
+        c.width = 1000;
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        
+
+        const socket = new WebSocket('ws://localhost:8000/socketmsg/');
+
+
+        function co(x_co,y_co){
+
+            x=(Math.floor(x_co*2/block))*block
+            y=Math.floor(y_co*1.5/block)*block
+            
+            
+            
+            crender(x,y)
+            }
+            
+            function crender(x,y){
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+                ctx.fillStyle = "red";
+                ctx.fillRect(x, y, block, block);
+            
+            
+            
+            
+            }
+
+
+
+
+
+
+
+
+
+
+
+        socket.onmessage = function(event) {
+            const message = JSON.parse(event.data); // Parse the JSON string to object
+            var x = message.x ;
+            var y = message.y;
+            co(x,y)
+          
+        };
+
+     
+    </script>
+</body>
+</html>
